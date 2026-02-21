@@ -87,14 +87,42 @@
       Diseñado para empresas que necesitan claridad, foco y resultados reales.
     </p>
 
-    <a href="#" class="cta">Solicitar diagnóstico Method 360</a>
+ <a href="#" class="cta" onclick="ejecutarDiagnostico(); return false;">
+  Solicitar diagnóstico Method 360
+</a>
   </section>
-
+ <div id="resultado" style="white-space: pre-wrap; margin-top: 30px;"></div>
   <footer>
     © VALBOTIA — Todos los derechos reservados
   </footer>
 
   <!-- cambio para activar commit -->
+<script>
+  async function ejecutarDiagnostico() {
+    const resultado = document.getElementById("resultado");
+    if (!resultado) return;
 
+    resultado.innerText = "Analizando tu sistema... ⏳";
+
+    try {
+      const response = await fetch("/.netlify/functions/diagnostico", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          origen: "landing_web",
+          metodo: "method360"
+        })
+      });
+
+      const data = await response.json();
+      resultado.innerText = JSON.stringify(data, null, 2);
+
+    } catch (error) {
+      resultado.innerText = "Error al conectar con VALBOTIA OS ❌";
+    }
+  }
+</script>
 </body>
 </html>
